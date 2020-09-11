@@ -1,0 +1,60 @@
+AK8S-02 Working with Cloud Build
+
+Objectives
+In this lab, you learn how to perform the following tasks:
+Use Cloud Build to build and push containers
+Use Container Registry to store and deploy containers
+
+Task 1: In GCP console, on the top right toolbar, click the Open Cloud Shell button.
+
+
+ 1.To Enable cloud-build APIs run:
+		gcloud services enable cloud-build
+	To enable Container-Registry APIS run:
+		gcloud services enable Container-Registry
+
+2. Create an empty quickstart.sh file using the nano text editor.
+		nano quickstart.sh
+
+3. Add the following lines in to the quickstart.sh file: and Save the file and close nano by pressing the CTRL+X key, then press Y and enter.
+		#!/bin/sh
+		echo "Hello, world! The time is $(date)."
+
+3. Create an empty Dockerfile file using the nano text editor.
+		nano Dockerfile
+
+4.  Add the following Dockerfile command: (This instructs the build to use the Alpine Linux base image.)
+    Add the following Dockerfile command to the end of the Dockerfile: (This adds the quickstart.sh script to the / directory in the image.)
+    Add the following Dockerfile command to the end of the Dockerfile:
+		FROM alpine
+		COPY quickstart.sh /
+		CMD ["/quickstart.sh"]
+
+5. Save the file and close nano by pressing the CTRL+X key, then press Y and enter.
+
+6. Run the following command to make the quickstart.sh script executable.
+		chmod +x quickstart.sh
+7. run the following command to build the Docker container image in Cloud Build.
+		gcloud builds submit --tag gcr.io/${GOOGLE_CLOUD_PROJECT}/quickstart-image .
+8.  When the build completes, comfirm your Docker image is built and pushed to Container Registry.
+
+9.   enter the following command to clone the repository to the lab Cloud Shell.
+		git clone https://github.com/GoogleCloudPlatformTraining/training-data-analyst
+10.  Change to the directory that contains the sample files for this lab.
+		cd ~/training-data-analyst/courses/ak8s/02_Cloud_Build/a
+11.  execute the following command to view the contents of cloudbuild.yaml.
+		cat cloudbuild.yaml
+12.  execute the following command to start a Cloud Build using cloudbuild.yaml as the build configuration file:
+		gcloud builds submit --config cloudbuild.yaml .
+
+Task 3. Building and Testing Containers with a build configuration file and Cloud Build
+
+13. change to the directory that contains the sample files for this lab.
+		cd ~/training-data-analyst/courses/ak8s/02_Cloud_Build/b
+
+14.  execute the following command to view the contents of cloudbuild.yaml.
+		cat cloudbuild.yaml
+15.  execute the following command to start a Cloud Build using cloudbuild.yaml as the build configuration file:
+		gcloud builds submit --config cloudbuild.yaml .
+16.  Confirm that your command shell knows that the build failed:
+		echo $?

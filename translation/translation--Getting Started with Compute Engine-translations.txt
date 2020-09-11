@@ -1,0 +1,90 @@
+
+Google Cloud Fundamentals: Getting Started with Compute Engine
+
+Objectives
+
+In this lab, you will learn how to perform the following tasks:
+Create a Compute Engine virtual machine using the Google Cloud Platform (GCP) Console.
+Create a Compute Engine virtual machine using the gcloud command-line interface.
+Connect between the two instances.
+
+
+Task 1: Create a virtual machine using the GCP Console
+
+Create an Instance with assigned region and zone,
+default machine type,
+boot disk -debian GNU?Linux 9 (stretch),
+defaults Identity and API Access and 
+allow HHTP traffic and Leave all other defaults unmodified.
+
+In GCP console, on the top right toolbar, click the Open Cloud Shell button.
+
+1.  Set the zone with this command
+
+			gcloud config set compute/zone us-central1-a
+
+2.  To create a VM instance called my-vm-1 in that zone, execute this command:
+
+			gcloud compute instances create "my-vm-1" --machine-type "n1-standard-1" --image-project "debian-cloud" --image "debian-9-stretch-v20190213" --subnet "default" --tags http
+
+3. To Allow HTTP traffic.
+
+			gcloud compute firewall-rules creat allow.http --action=ALLOW --destination=INGRESS --rules=http:80 --target-tags=http
+
+Task 2:  Create a virtual machine using in location 2
+
+4.  To set your default zone 2
+
+			gcloud config set compute/zone us-central1-b
+
+5. To create a VM instance called my-vm-2 in that zone, execute this command:
+
+			gcloud compute instances create "my-vm-2" --machine-type "n1-standard-1" --image-project "debian-cloud" --image "debian-9-stretch-v20190213" --subnet "default"
+
+6. To close the Cloud Shell, execute the following command:
+
+			exit
+
+Task 4: Connect between the two VM instances
+
+7. connect to my-vm-2
+	
+			gcloud compute ssh my-vm-2
+
+8.  Use the ping command to confirm that my-vm-2 can reach my-vm-1 over the network:
+			ping my-vm-1
+
+9. Press Ctrl+C to abort the ping command.
+
+10. Use the command to connect my-vm-1:
+			ssh my-vm-1
+
+11. At the command prompt on my-vm-1, install the Nginx web server:
+
+			sudo apt-get install nginx-light -y
+
+12. Use the nano text editor to add a custom message to the home page of the web server:
+
+			sudo nano /var/www/html/index.nginx-debian.html
+
+13.  Use the arrow keys to move the cursor to the line just below the h1 header. Add text like this, and replace YOUR_NAME with your name:
+
+			Hi from Bonne
+
+14.  Press Ctrl+O and then press Enter to save your edited file, and then press Ctrl+X to exit the nano text editor.
+
+15.  Confirm that the web server is serving your new page. At the command prompt on my-vm-1, execute this command:
+
+			curl http://localhost/
+
+16.  To exit the command prompt on my-vm-1, execute this command:
+
+			exit
+
+17. To confirm that my-vm-2 can reach the web server on my-vm-1, at the command prompt on my-vm-2, execute this command:
+
+			curl http://my-vm-1/
+
+18. Copy the External IP address for my-vm-1 and paste it into the address bar of a new browser tab. You will see your web server's home page, including your custom text.
+
+Congratulations
